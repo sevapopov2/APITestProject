@@ -1,4 +1,5 @@
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.notNullValue;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,9 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import io.restassured.response.Response;
 
-public class APIRunTest {
+public class LiveEndpointTest {
     private static Response response;
-    private static final Logger LOGGER = LogManager.getLogger(APIRunTest.class);
+    private static final Logger LOGGER = LogManager.getLogger(LiveEndpointTest.class);
 
     @BeforeAll
     public static void setup() {
@@ -27,9 +28,15 @@ public class APIRunTest {
     }
 
     @Test
-    public void apiRunTest() {
-        LOGGER.info(response.asString());
-        response.then().statusCode(200);
-
+    public void turmsTest() {
+        response.then().body("terms", notNullValue());
     }
+
+    @Test
+    public void currencyReturnTest() {
+        response = given().get(Consts.URL + Consts.LIVE_ENDPOINT + Consts.TOKEN + "&currencies=USDRUB");
+        System.out.println(response.asString());
+        LOGGER.info(response.asString());
+    }
+
 }
